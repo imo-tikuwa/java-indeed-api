@@ -9,10 +9,12 @@ import java.net.URL;
 import java.net.URLEncoder;
 
 import javax.xml.parsers.DocumentBuilderFactory;
+
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
+
 import com.imo_tikuwa.indeed.cond.IndeedApiSearchCondition;
 import com.imo_tikuwa.indeed.entity.IndeedApiInfo;
 import com.imo_tikuwa.indeed.entity.IndeedJob;
@@ -24,13 +26,13 @@ public class IndeedApi {
 	 * IndeedのAPIに渡すURLを取得する
 	 * @param condition
 	 * @return
-	 * @throws IndeedApiException 
+	 * @throws IndeedApiException
 	 */
 	private static String createIndeedApiUrl(IndeedApiSearchCondition condition) throws IndeedApiException {
 
 		StringBuffer sb = new StringBuffer();
 
-		sb.append("http://api.indeed.com/ads/apisearch?");
+		sb.append(API_URL_BASE);
 		String publisher = (condition.getPublisher() != null) ? condition.getPublisher() : "";
 		sb.append("publisher=" + publisher);
 		if (condition.getV() != null) {
@@ -134,22 +136,11 @@ public class IndeedApi {
 			e.printStackTrace();
 			throw new IndeedApiException("APIリクエスト中のエラー");
 		}
-//		catch (MalformedURLException e) {
-//			e.printStackTrace();
-//		} catch (ProtocolException e) {
-//			e.printStackTrace();
-//		} catch (IOException e) {
-//			e.printStackTrace();
-//		} catch (ParserConfigurationException e) {
-//			e.printStackTrace();
-//		} catch (SAXException e) {
-//			e.printStackTrace();
-//		}
 
 		// XMLのルート要素とその子要素を取得
 		Element root = document.getDocumentElement();
 		NodeList rootChildren = root.getChildNodes();
-		
+
 		// レスポンスXMLのエラーチェック
 		for (int i = 0; i < rootChildren.getLength(); i++) {
 			Node node = rootChildren.item(i);
@@ -221,11 +212,6 @@ public class IndeedApi {
 				conn.disconnect();
 			}
 		}
-//		catch (NoSuchFieldException e) {
-//			e.printStackTrace();
-//		} catch (IllegalAccessException e) {
-//			e.printStackTrace();
-//		}
 
 		return indeedApiInfo;
 	}
